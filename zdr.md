@@ -1,0 +1,27 @@
+---
+layout: page
+title: ZDR
+permalink: /zdr/
+---
+
+ZERO-DAY RANCH - QUARTER HORSE
+
+***
+
+### Garanhão:
+
+ TAVISO HANDDOME HASP - P240789 
+
+ (ETERNALLY HANDDOME - P033815  X  SANDY LEO ARRANGER - P101474)
+
+ ***
+
+### Matrizes
+
+Baby Face Pine (MISTER SLYDUN PINE - P064140  X  BABY FACE PEPPY - P030269)
+
+Miss Jay Diego (DON DIEGO LAD HJG - P126559  X  JAY SIX FLI - P205925)
+
+Mel Steel ZDR (DESTINY STEEL - P115450 X BABY FACE PINE - P077486)
+
+

