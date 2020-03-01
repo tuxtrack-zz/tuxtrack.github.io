@@ -3,7 +3,7 @@
 #
 
 # Name of your site (displayed in the header)
-name: tuxtrack
+name: ZeroDay Ranch
 
 # Short bio or description (displayed in the header)
 description: Hacking stuff directly from sertão.
@@ -21,15 +21,16 @@ theme: jekyll-theme-hacker
 # Includes an icon in the footer for each username you enter
 footer-links:
   dribbble:
-  email: tuxtrack@hacknroll.com
+  email: 
   facebook:
   flickr:
   github: tuxtrack
-  instagram: elbert_cirino
+  instagram1: elbert_cirino
+  instagram: zerodayranch
   linkedin:
   pinterest:
   rss: # just type anything here for a working RSS icon
-  twitter: 
+  twitter: tuxtrack
   stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   youtube: # channel/<your_long_string> or user/<user-name>
   googleplus: # anything in your profile username that comes after plus.google.com/

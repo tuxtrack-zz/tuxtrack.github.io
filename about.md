@@ -12,6 +12,4 @@ HackN'Roll Team [https://hacknroll.com](https://hacknroll.com)
 
 ### Contact me
 
-Twitter: [https://twitter.com/tuxtrack](https://twitter.com/tuxtrack)
-
-E-Mail: [tuxtrack@hacknroll.com](tuxtrack@hacknroll.com)
+E-Mail: tuxtrack@hacknroll.com

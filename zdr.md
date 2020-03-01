@@ -1,22 +1,19 @@
 ---
 layout: page
-title: ZDR
+title: Zero-Day Ranch - Quarto de Milha
 permalink: /zdr/
 ---
 
-ZERO-DAY RANCH - QUARTER HORSE
+### GARANHÃO
 
-***
+Taviso Handdome HASP 
 
-### Garanhão:
-
- TAVISO HANDDOME HASP - P240789 
-
- (ETERNALLY HANDDOME - P033815  X  SANDY LEO ARRANGER - P101474)
+(ETERNALLY HANDDOME - P033815  X  SANDY LEO ARRANGER - P101474) 
+<p href="/" class="site-horse"><img src="http://127.0.0.1:4000/images/taviso.jpg"/></p>
 
  ***
 
-### Matrizes
+### MATRIZES
 
 Baby Face Pine (MISTER SLYDUN PINE - P064140  X  BABY FACE PEPPY - P030269)
 

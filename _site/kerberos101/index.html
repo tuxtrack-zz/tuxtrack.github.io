@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Kerberos & Kerberoast Attack – tuxtrack – Hacking stuff directly from sertão.</title>
+    <title>Kerberos & Kerberoast Attack – ZeroDay Ranch – Hacking stuff directly from sertão.</title>
 
         <meta charset="utf-8" />
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
@@ -14,7 +14,7 @@
     <meta property="og:description" content="O protocolo Kerberos fornece autenticação para o ambiente de computação possibilitando flexibilidade para operar entre diversos sistemas operacionais. Em ambientes Microsoft Windows, o protocolo é instalado como parte do Active Directory Services, ajudando no controle centralizado do gerenciamento de contas de usuários, computadores, grupos, serviços e recursos, desde que a Microsoft o adotou no Windows 2000, abandonando o processo de autenticação que na ocasião era através do NT LAN Manager (NTML) Challenge-Response.
 " />
     
-    <meta name="author" content="tuxtrack" />
+    <meta name="author" content="ZeroDay Ranch" />
 
     
     <meta property="og:title" content="Kerberos & Kerberoast Attack" />
@@ -26,7 +26,7 @@
     <![endif]-->
 
     <link rel="stylesheet" type="text/css" href="/style.css" />
-    <link rel="alternate" type="application/rss+xml" title="tuxtrack - Hacking stuff directly from sertão." href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="ZeroDay Ranch - Hacking stuff directly from sertão." href="/feed.xml" />
 
     <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
   </head>
@@ -38,7 +38,7 @@
           <a href="/" class="site-avatar"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/lamp.png" /></a>
 
           <div class="site-info">
-            <h1 class="site-name"><a href="/">tuxtrack</a></h1>
+            <h1 class="site-name"><a href="/">ZeroDay Ranch</a></h1>
             <p class="site-description">Hacking stuff directly from sertão.</p>
           </div>
 
@@ -100,7 +100,7 @@
 <hr />
 
 <ul>
-  <li>Para que o usuário possa utilizar algum serviço do domínio, o processo de autorização se dá através do envio do TGT ao Domain Controller para a requisição do Service Ticket ou TGS (Ticket-Granting-Service), ex.: MSSqlSvc/SQL.domain.com.</li>
+  <li>Para que o usuário possa utilizar algum serviço do domínio, o processo de autorização se dá através do envio do TGT ao Domain Controller para a requisição do Service Ticket ou TGS (Ticket-Granting-Service), ex.: MSSqlSvc/SQL.domain.com. Durante esse processo o atacante pode especificar qual criptografia ele suporta <a href="https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-security-configure-encryption-types-allowed-for-kerberos">(RC4_HMAC, AES256_CTS_HMAC_SHA1_96, etc)</a>.</li>
 </ul>
 
 <p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/kb101/04.png" alt="" /></p>
@@ -337,16 +337,20 @@ Stopped: Thu Feb 13 11:07:39 2020
     <div class="wrapper-footer">
       <div class="container">
         <footer class="footer">
+          <div>
+            <h6>Social Network</h6>
+          </div> 
           
-<a href="mailto:tuxtrack@hacknroll.com"><i class="svg-icon email"></i></a>
+
 
 
 <a href="https://github.com/tuxtrack"><i class="svg-icon github"></i></a>
 <a href="https://instagram.com/elbert_cirino"><i class="svg-icon instagram"></i></a>
+<a href="https://instagram.com/zerodayranch"><i class="svg-icon instagram"></i></a>
 
 
 
-
+<a href="https://twitter.com/tuxtrack"><i class="svg-icon twitter"></i></a>
 
 
 
