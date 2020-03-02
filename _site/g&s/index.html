@@ -58,7 +58,7 @@
   <div class="entry">
     <p>Como mostrado no <a href="https://tuxtrack.github.io/kerberos101/">post anterior</a>, em meio ao processo de autenticação de um usuário/computador em um ambiente Microsoft Active Directory utilizando o protocolo Kerberos, uma troca de informações ocorre para validar a conta em questão.</p>
 
-<p><img src="http://127.0.0.1:4000/images/ges/kerb.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/ges/kerb.png" alt="" /></p>
 
 <p>Ao ocorrer a solicitação de acesso a algum recurso existente no domínio utilizando o protocolo Kerberos, automaticamente será solicitado ao KDC um ticket do tipo TGT (Ticket-Granting Ticket). Caso a conta seja válida, o KDC retornará o ticket assinado/criptografado pela conta KRBTGT.</p>
 
@@ -66,13 +66,13 @@
   <p>KRBTGT is also the security principal name used by the KDC for a Windows Server domain, as specified by RFC 4120. The KRBTGT account is the entity for the KRBTGT security principal, and it is created automatically when a new domain is created. <a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/dn745899(v=ws.11)">MS Docs</a></p>
 </blockquote>
 
-<p><img src="http://127.0.0.1:4000/images/ges/krbtgt.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/ges/krbtgt.png" alt="" /></p>
 
 <h3 id="golden-tickets">Golden Tickets</h3>
 
-<p>O problema de segurança ocorre quando o hash da conta KRBTGT é comprometido. Nesse momento, o atacante pode forjar TGT’s, assinando-os com o hash obtido e se utilizar de qualquer conta presente no domínio (fojada) empoderando-se dos privilégios concedidos as mesmas ou adicionando novos privilégios alterando a estrutura do ticket.</p>
+<p>O problema de segurança ocorre quando o hash da conta KRBTGT é comprometido. Nesse momento, o atacante pode forjar TGT’s, assinando-os com o hash obtido e se utilizar de qualquer conta presente no domínio (forjada) empoderando-se dos privilégios concedidos as mesmas ou adicionando novos privilégios alterando a estrutura do ticket.</p>
 
-<p><img src="http://127.0.0.1:4000/images/ges/gt.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/ges/gt.png" alt="" /></p>
 
 <ul>
   <li>Forging Golden Tickets</li>
@@ -119,19 +119,19 @@ Credentials:
 </span></code></pre></div></div>
 <p>Com as informações necessárias em mãos, a execução do ataque pode ser concluída.</p>
 
-<p><img src="http://127.0.0.1:4000/images/ges/mimi.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/ges/mimi.png" alt="" /></p>
 
-<p>Com a execução do mimikatz, o ticket para o usuário ganderson foi forjado e submetido na sessão atual utilizando um ataque chamado Pass-The-Ticket, parametro “/ptt” (Devo criar um outro blog post mostrando como funciona o Pass-the-ticket e Over Pass the Hash). Agora, o atacante poderá acessar todos os recursos nos quais o usuário possui acesso utilizando o ticket forjado.</p>
+<p>Com a execução do mimikatz, o ticket para o usuário ganderson foi forjado e submetido na sessão atual utilizando um ataque chamado Pass-The-Ticket, parametro “/ptt” (Devo criar um outro blog post mostrando como funciona o Pass-the-ticket e Over Pass the Hash).</p>
 
 <hr />
 
 <h3 id="silver-tickets">Silver Tickets</h3>
 
-<p>Silver Tickets seguem a mesma ideia do Golden Ticket, porém é forjado um TGS (Service Ticket) em vez do TGT. Os tickets são criados utilizando a conta do computador ou conta de serviço do recurso que o atacante deseja acessar. Assim como no Gold Ticket, as informações sobre o usuário, grupo e etc, podem ser forjadas sem a necessidade de nenhuma troca de informação entre User Workstation e KDC.</p>
+<p>Silver Tickets seguem a mesma ideia do Golden Ticket, porém, forjado um TGS (Service Ticket) em vez do TGT. Os tickets são criados utilizando a conta do computador ou conta de serviço do recurso que o atacante deseja acessar. As informações sobre o usuário, grupo e etc podem ser forjadas sem a necessidade de nenhuma troca de informação entre User Workstation e KDC.</p>
 
-<p><img src="http://127.0.0.1:4000/images/ges/st.png" alt="" /></p>
+<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/ges/st.png" alt="" /></p>
 
-<p>Por padrão as senhas das contas dos computadores são alteradas a cada 30 dias de modo aleatório. Logo, o hash da conta pode ser alterado em meio ao projeto, causando perda de acesso. Para contornar o “problema”, é possível solicitar a informação sobre a máquina alvo.</p>
+<p>Por padrão, as senhas das contas dos computadores são alteradas a cada 30 dias. Logo, o hash da conta pode ser alterado em meio ao projeto, causando perda de acesso. Para contornar o “problema”, é possível solicitar a informação sobre a máquina alvo e verificar o tempo limite até a senha ser alterada novamente.</p>
 
 <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">beacon</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">powerpick</span><span class="w"> </span><span class="nx">Get-NetComputer</span><span class="w"> </span><span class="nt">-Name</span><span class="w"> </span><span class="nx">SQL</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select</span><span class="w"> </span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">samaccounttype</span><span class="p">,</span><span class="w"> </span><span class="nx">pwdlastset</span><span class="w">
 </span><span class="p">[</span><span class="o">*</span><span class="p">]</span><span class="w"> </span><span class="nf">Tasked</span><span class="w"> </span><span class="nx">beacon</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">run:</span><span class="w"> </span><span class="nx">Get-NetComputer</span><span class="w"> </span><span class="nt">-Name</span><span class="w"> </span><span class="nx">SQL</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Select</span><span class="w"> </span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">samaccounttype</span><span class="p">,</span><span class="w"> </span><span class="nx">pwdlastset</span><span class="w"> </span><span class="p">(</span><span class="nf">unmanaged</span><span class="p">)</span><span class="w">
@@ -152,13 +152,11 @@ Credentials:
 </span><span class="nf">Access</span><span class="w"> </span><span class="nx">is</span><span class="w"> </span><span class="nx">denied.</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Após forjar o Silver Ticket para o serviço <a href="https://pt.wikipedia.org/wiki/Server_Message_Block">CIFS</a>, o acesso ao compartilhamento foi concedido.</p>
-
 <p>Para forjar um Silver Ticket, algumas informações adicionais são necessárias:</p>
 
 <p>Taget: FQDN <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">(Fully Qualified Domain Name)</a></p>
 
-<p>Services: Serviço no qual deseja obter acesso.</p>
+<p>Service: Serviço no qual deseja obter acesso (PS-Remoting, WMI, Scheduled Tasks, CIFS, LDAP, WINRM…)</p>
 
 <p>rc4: NTLM Hash do computador/serviço, usado para assinar os tickets de serviço.</p>
 
@@ -206,9 +204,9 @@ beacon&gt; shell dir \\SQL.hnr.local\c$
 
 </span></code></pre></div></div>
 
-<p>Como pode-se notar, após submeter o Silver Ticket na sessão o acesso ao compartilhamento foi permitido, demonstrando a perfeita execução do ataque.</p>
+<p>Como pode-se notar, após submeter o Silver Ticket na sessão para o serviço <a href="https://pt.wikipedia.org/wiki/Server_Message_Block">CIFS</a>, o acesso ao compartilhamento foi concedido, demonstrando a perfeita execução do ataque.</p>
 
-<p>Os intuitos dos posts é se fazer entender como funcionam os ataques. As ferramentas apresentadas são apenas meios para que possamos alcançar um objetivo. Espero que tenha conseguido passar com clareza todas as informações necessárias para o entendimento e sanar quaisquer dúvidas. Caso eu tenha pecado em algo, ou alguma informação não teve embasamento necessário para seu entendimento, por favor entre em contato comigo, ficarei extramente feliz em ajudar.</p>
+<p>O intuito dos posts é se fazer entender como funcionam os ataques. As ferramentas apresentadas são apenas meios para que possamos alcançar um objetivo. Espero que tenha conseguido passar com clareza todas as informações necessárias para o entendimento e sanar quaisquer dúvidas. Caso eu tenha pecado em algo, ou alguma informação não teve embasamento necessário para seu entendimento, por favor entre em contato comigo, ficarei extramente feliz em ajudar.</p>
 
 <p>Até o próximo.!!!</p>
 
