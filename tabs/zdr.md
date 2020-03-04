@@ -7,8 +7,23 @@ title: ZeroDay Ranch
 # © 2017-2019 Cotes Chung
 # MIT License
 ---
-<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/taviso.png"/></p>
-<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/taviso.png"/></p>
+<div class="box">
+	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/taviso.jpg" width="200" height="200"/></p> 
+</div>
+<div class="box">
+	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/redondel.jpg" width="200" height="200"/></p> 
+</div>
+<div class="box">
+	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/mel.jpg" width="200" height="200"/></p> 
+</div>
+<style>
+div.box {
+	width: 250px;
+	display: inline-block;
+}
+</style>
+
+
 
 
 ### GARANHÃO
