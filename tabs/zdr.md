@@ -10,13 +10,13 @@ title: Zero Day Ranch
 Criação de cavalos da raça Quarto de Milha para a modalidade Vaquejada.
 
 <div class="box">
-	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/taviso.jpg" width="200" height="200"/></p> 
+	<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/taviso.jpg" width="200" height="200"/></p> 
 </div>
 <div class="box">
-	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/redondel.jpg" width="200" height="200"/></p> 
+	<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/redondel.jpg" width="200" height="200"/></p> 
 </div>
 <div class="box">
-	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/mel.jpg" width="200" height="200"/></p> 
+	<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/mel.jpg" width="200" height="200"/></p> 
 </div>
 <style>
 div.box {
@@ -26,13 +26,13 @@ div.box {
 </style>
 
 <div class="box">
-	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr1.jpg" width="200" height="200"/></p> 
+	<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr1.jpg" width="200" height="200"/></p> 
 </div>
 <div class="box">
-	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr2.jpg" width="200" height="200"/></p> 
+	<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr2.jpg" width="200" height="200"/></p> 
 </div>
 <div class="box">
-	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr3.jpg" width="200" height="200"/></p> 
+	<p><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr3.jpg" width="200" height="200"/></p> 
 </div>
 <style>
 div.box {
