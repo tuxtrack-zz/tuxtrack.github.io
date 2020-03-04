@@ -59,3 +59,11 @@ LICENSE
 .jekyll-cache/Jekyll/Cache/Jekyll--Converters--Markdown/4b/c57d4791511df4828a2670626f80222750aa1325392b38caacaa3416c48ba6
 .jekyll-cache/Jekyll/Cache/Jekyll--Converters--Markdown/33/822c47d742246057824f718f934a77acf6d569ee79587d5eba3c790e8ae1be
 .jekyll-cache/Jekyll/Cache/Jekyll--Converters--Markdown/21/10612eef5e11e46c801f04331e4979b54ab34e8e75c6492f1cf350ab5b2908
+_scripts/py/pages_generator.py
+_scripts/py/init_all.py
+_scripts/py/requirements.txt
+_scripts/py/update_posts_lastmod.py
+_scripts/py/utils/__init__.py
+_scripts/py/utils/common.py
+_scripts/sh/sync_monitor.sh
+LICENSE
