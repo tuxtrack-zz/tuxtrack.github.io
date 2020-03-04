@@ -25,6 +25,22 @@ div.box {
 }
 </style>
 
+<div class="box">
+	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr1.jpg" width="200" height="200"/></p> 
+</div>
+<div class="box">
+	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr2.jpg" width="200" height="200"/></p> 
+</div>
+<div class="box">
+	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/zdr3.jpg" width="200" height="200"/></p> 
+</div>
+<style>
+div.box {
+	width: 250px;
+	display: inline-block;
+}
+</style>
+
 
 
 
