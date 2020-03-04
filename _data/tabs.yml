@@ -18,6 +18,12 @@
   path: tabs
   url: archives
   icon: "fas fa-archive"
+
+-
+  name: "Tags"
+  path: tabs
+  url: tags
+  icon: "fas fa-tags"
 -
   name: "About Me"
   icon: "fas fa-info"
