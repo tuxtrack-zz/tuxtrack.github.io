@@ -1,5 +1,5 @@
 ---
-title: ZeroDay Ranch
+title: Zero Day Ranch
 
 # The Archives of posts.
 # v2.0
@@ -7,6 +7,8 @@ title: ZeroDay Ranch
 # © 2017-2019 Cotes Chung
 # MIT License
 ---
+Criação de cavalos da raça Quarto de Milha.
+
 <div class="box">
 	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/taviso.jpg" width="200" height="200"/></p> 
 </div>
