@@ -13,7 +13,7 @@ title: ZeroDay Ranch
 Taviso Handdome HASP 
 
 (ETERNALLY HANDDOME - P033815  X  SANDY LEO ARRANGER - P101474) 
-<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/images/taviso.jpg"/></p>
+<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/taviso.jpg"/></p>
 
  ***
 
