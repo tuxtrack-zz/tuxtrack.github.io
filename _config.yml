@@ -8,17 +8,15 @@
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 #--------------------------
 
-title: ZeroDay Ranch                          # the main title
+title: ZERO-DAY RANCH                          # the main title
 
 tagline: Hacking stuff directly from sertão.  # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  A minimal, portfolio, sidebar,
-  bootstrap Jekyll theme with responsive web design
-  and focuses on text presentation.
+  ZeroDay Ranch 
 
 # Replace with your domain, e.g. 'https://username.github.io'
-url: 'protocol://domain'
+url: 'https://tuxtrack.github.io'
 
 author: tuxtrack                  # change to your full name
 
@@ -28,17 +26,25 @@ github:
   username: tuxtrack             # change to your github username
 
 twitter:
-  username: tuxtrack            # change to your twitter username
+  username: tuxtrack 
+
+instagram:
+  username: zerodayranch            # change to your twitter username
+
+instagram1:
+  username: elbert_cirino    
 
 social:
   name: tuxtrack                  # it will shows as the copyright owner in Footer
   email: tuxtrack@hacknroll.com             # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username      # change to your twitter homepage
-    - https://github.com/username       # change to your github homepage
+    - https://twitter.com/tuxtrack      # change to your twitter homepage
+    - https://github.com/tuxtrack 
+    - https://instagram.com/zerodayranch
+    - https://instagram.com/elbert_cirino      # change to your github homepage
     # Uncomment below to add more social links
-    # - https://www.facebook.com/username
+    - https://www.facebook.com/elbertcirino
     # - https://www.linkedin.com/in/username
 
 google_site_verification: google_meta_tag_verification # change to your verification string
@@ -49,7 +55,7 @@ google_site_verification: google_meta_tag_verification # change to your verifica
 baseurl: ''
 
 # Change to your timezone › http://www.timezoneconverter.com/cgi-bin/findzone/findzone
-timezone: Asia/Shanghai
+timezone: America/Maceio
 
 google_analytics:
   # Fill with your Google Analytics ID
