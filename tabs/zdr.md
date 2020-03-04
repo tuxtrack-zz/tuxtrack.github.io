@@ -7,7 +7,7 @@ title: Zero Day Ranch
 # © 2017-2019 Cotes Chung
 # MIT License
 ---
-Criação de cavalos da raça Quarto de Milha.
+Criação de cavalos da raça Quarto de Milha para a modalidade Vaquejada.
 
 <div class="box">
 	<p href="/" class="site-horse"><img src="https://raw.githubusercontent.com/tuxtrack/tuxtrack.github.io/master/assets/img/sample/zdr/taviso.jpg" width="200" height="200"/></p> 
@@ -41,14 +41,13 @@ div.box {
 }
 </style>
 
-
-
+***
 
 ### GARANHÃO
 
 Taviso Handdome HASP (ETERNALLY HANDDOME - P033815  X  SANDY LEO ARRANGER - P101474) 
 
- ***
+***
 
 ### MATRIZES
 
