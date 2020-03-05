@@ -221,7 +221,7 @@ $tab-count: {{ site.data.tabs | size }};
     width: 10rem;
     height: 10rem;
     border-radius: 50%;
-    border: 5px solid #341b6f;
+    border: 4px solid #341b6f;
     overflow: hidden;
     transform: translateZ(0); // fixed the zoom in Safari
     -webkit-transition: border-color 0.35s ease-in-out;
