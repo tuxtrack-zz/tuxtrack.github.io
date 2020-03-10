@@ -9,11 +9,6 @@
   name: Blog
   icon: "fas fa-home"
 -
-  name: "The ZeroDay Ranch"
-  icon: "fas fa-stream"
-  path: tabs
-  url: zdr
--
   name: "Archives"
   path: tabs
   url: archives
