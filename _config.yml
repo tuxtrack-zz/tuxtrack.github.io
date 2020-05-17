@@ -86,7 +86,7 @@ theme_mode: dark
 # boolean type, global switch for ToC in posts.
 toc: false
 
-paginate: 4
+paginate: 5
 
 markdown: kramdown
 
@@ -190,4 +190,7 @@ sitemap_exclude:  # Sitemap will exclude the following items.
     - feed.xml
     - sitemap.xml
     - robots.txt
-    - redirects.json
+    - redirects.json  
+
+plugins:
+  - jekyll-paginate
